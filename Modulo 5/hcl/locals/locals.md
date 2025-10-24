@@ -1,0 +1,2 @@
+# Locals
+Os locals é uma funcionalidade do Terraform que permite definir variáveis locais de dentro de um arquivo de configuração do Terraform. Isso nos ajuda a reduzir a repetição de código, tornando a configuração mais limpa e fácil de manter, seu escopo de utilização é o arquivo de configuração local e não são expostos para outras configurações ou módulos do Terraform, diferente das variaveis de input que possuem essas características.

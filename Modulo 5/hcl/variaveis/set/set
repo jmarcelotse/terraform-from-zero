@@ -1,0 +1,41 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=3.48.0"
+    }
+  }
+}
+provider "azurerm" {
+  features {}
+}
+
+variable "ports_to_block" {
+  type        = set(string)
+  description = "Portas para blockear para internet"
+  default = ["445","21","582"]
+}
+
+resource "azurerm_resource_group" "rodnet_teste" {
+  name     = "rodnet-rg-nsg"
+  location = "West Europe"
+}
+
+resource "azurerm_network_security_group" "rodnet_teste_sg" {
+  for_each = var.ports_to_block
+  name                = "acceptanceTestSecurityGroup1"
+  location            = azurerm_resource_group.rodnet_teste.location
+  resource_group_name = azurerm_resource_group.rodnet_teste.name
+
+  security_rule {   
+    name                       = "test123"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "${each.key}"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
